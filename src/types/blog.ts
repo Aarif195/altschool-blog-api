@@ -6,7 +6,7 @@ export interface IBlog {
   description?: string;
   body: string;
   tags?: string[];
-  author: Types.ObjectId; // references User
+  author: Types.ObjectId; 
   state: "draft" | "published";
   read_count: number;
   reading_time: number;
