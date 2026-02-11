@@ -4,6 +4,11 @@ import { hashPassword } from "../utils/helpers";
 
 export interface IUserDocument extends Omit<IUser, "_id">, Document { }
 
+export interface IUserDocument extends Omit<IUser, "_id">, Document {
+  comparePassword(candidatePassword: string): boolean;
+}
+
+
 const userSchema = new Schema<IUserDocument>(
     {
         first_name: { type: String, required: true },

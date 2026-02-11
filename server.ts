@@ -2,7 +2,8 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-// import authRoutes from "./src/routes/auth";
+import authRoutes from "./src/routes/auth.routes";
+
 
 
 dotenv.config();
@@ -29,7 +30,7 @@ app.get("/", (req, res) => {
 });
 
 
-// app.use(authRoutes);
+app.use("/api/auth", authRoutes);
 
 
 // Start server
