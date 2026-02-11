@@ -47,5 +47,19 @@ export class BlogController {
 }
 
 
+static async updateBlog(req: AuthRequest, res: Response) {
+  try {
+    const blogId = req.params.id as string
+    const requesterId = req.userId 
+    if (!requesterId) return sendError(res, "Unauthorized");
+
+    const updatedBlog = await BlogService.updateBlog(blogId, requesterId, req.body);
+    res.json({ blog: updatedBlog });
+  } catch (err: any) {
+    sendError(res, err.message);
+  }
+}
+
+
 
 }

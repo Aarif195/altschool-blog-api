@@ -8,6 +8,7 @@ const router = Router();
 router.post("/", authMiddleware, BlogController.createBlog);
 router.get("/", BlogController.getAllBlogs);
 router.get("/:id", BlogController.getBlog);
+router.put("/:id", authMiddleware, BlogController.updateBlog);
 
 
 export default router;

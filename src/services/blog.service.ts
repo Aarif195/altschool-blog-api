@@ -79,6 +79,35 @@ export class BlogService {
     }
 
 
+static async updateBlog(
+  blogId: string,
+  requesterId: string,
+  data: Partial<IBlog>
+) {
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) throw new Error("Blog not found");
+
+  // Only owner can update
+  if (blog.author.toString() !== requesterId) {
+    throw new Error("Unauthorized to update this blog");
+  }
+
+  // Update fields
+  if (data.title) blog.title = data.title;
+  if (data.description) blog.description = data.description;
+  if (data.body) {
+    blog.body = data.body;
+    blog.reading_time = BlogService.calculateReadingTime(data.body);
+  }
+  if (data.tags) blog.tags = data.tags;
+  if (data.state) blog.state = data.state; // allow draft → published
+
+  return blog.save();
+}
+
+
+
 }
 
 
