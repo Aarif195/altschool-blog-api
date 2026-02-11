@@ -13,3 +13,12 @@ export interface IBlog {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface GetBlogsOptions {
+  page?: number;
+  limit?: number;
+  state?: "draft" | "published";
+  search?: string;
+  sortBy?: "read_count" | "reading_time" | "createdAt";
+  sortOrder?: "asc" | "desc";
+}
