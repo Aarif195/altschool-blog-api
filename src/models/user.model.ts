@@ -5,7 +5,7 @@ import { hashPassword } from "../utils/helpers";
 export interface IUserDocument extends Omit<IUser, "_id">, Document { }
 
 export interface IUserDocument extends Omit<IUser, "_id">, Document {
-  comparePassword(candidatePassword: string): boolean;
+    comparePassword(candidatePassword: string): boolean;
 }
 
 
@@ -19,11 +19,18 @@ const userSchema = new Schema<IUserDocument>(
     { timestamps: true }
 );
 
-userSchema.pre<IUserDocument>("save", function (this: IUserDocument, next: any) {
-    if (!this.isModified("password")) return next();
-    this.password = hashPassword(this.password);
-    next();
+// userSchema.pre<IUserDocument>("save", function (this: IUserDocument, next: any) {
+//     if (!this.isModified("password")) return next();
+//     this.password = hashPassword(this.password);
+//     next();
+// });
+
+userSchema.pre<IUserDocument>("save", function (this: IUserDocument) {
+    if (this.isModified("password")) {
+        this.password = hashPassword(this.password);
+    }
 });
+
 
 // Compare password method
 userSchema.methods.comparePassword = function (candidatePassword: string) {
