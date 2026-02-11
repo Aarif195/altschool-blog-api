@@ -3,6 +3,8 @@ import path from "path";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRoutes from "./src/routes/auth.routes";
+import blogRoutes from "./src/routes/blog.routes";
+
 
 dotenv.config();
 
@@ -29,6 +31,8 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/blogs", blogRoutes);
+
 
 
 // Start server
