@@ -46,7 +46,7 @@ export class BlogController {
   }
 }
 
-
+// updateBlog
 static async updateBlog(req: AuthRequest, res: Response) {
   try {
     const blogId = req.params.id as string
@@ -59,6 +59,21 @@ static async updateBlog(req: AuthRequest, res: Response) {
     sendError(res, err.message);
   }
 }
+
+// deleteBlog
+static async deleteBlog(req: AuthRequest, res: Response) {
+  try {
+    const blogId = req.params.id as string
+    const requesterId = req.userId; 
+    if (!requesterId) return sendError(res, "Unauthorized");
+
+    await BlogService.deleteBlog(blogId, requesterId);
+    res.json({ message: "Blog deleted successfully" });
+  } catch (err: any) {
+    sendError(res, err.message);
+  }
+}
+
 
 
 

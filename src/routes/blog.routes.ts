@@ -9,6 +9,7 @@ router.post("/", authMiddleware, BlogController.createBlog);
 router.get("/", BlogController.getAllBlogs);
 router.get("/:id", BlogController.getBlog);
 router.put("/:id", authMiddleware, BlogController.updateBlog);
+router.delete("/:id", authMiddleware, BlogController.deleteBlog);
 
 
 export default router;

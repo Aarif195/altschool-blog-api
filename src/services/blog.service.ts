@@ -78,7 +78,7 @@ export class BlogService {
         return blog;
     }
 
-
+// updateBlog
 static async updateBlog(
   blogId: string,
   requesterId: string,
@@ -106,6 +106,19 @@ static async updateBlog(
   return blog.save();
 }
 
+// deleteBlog
+static async deleteBlog(blogId: string, requesterId: string) {
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) throw new Error("Blog not found");
+
+  // Only owner can delete
+  if (blog.author.toString() !== requesterId) {
+    throw new Error("Unauthorized to delete this blog");
+  }
+
+  return blog.deleteOne();
+}
 
 
 }
