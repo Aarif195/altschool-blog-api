@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+// import authRoutes from "./src/routes/auth";
 
 
 dotenv.config();
@@ -16,18 +17,20 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 // MongoDB connection
+const MONGO_URI = process.env.MONGO_URI!;
 mongoose
-  .connect(process.env.MONGODB_URI!)
+  .connect(MONGO_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB connection error:", err));
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-
-
-// Error handling middleware
-app.use((err: any, req: any, res: any, next: any) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
+// Test route 
+app.get("/", (req, res) => {
+  res.send("Hello World!"); 
 });
+
+
+// app.use(authRoutes);
+
 
 // Start server
 app.listen(PORT, () => {
