@@ -19,12 +19,6 @@ const userSchema = new Schema<IUserDocument>(
     { timestamps: true }
 );
 
-// userSchema.pre<IUserDocument>("save", function (this: IUserDocument, next: any) {
-//     if (!this.isModified("password")) return next();
-//     this.password = hashPassword(this.password);
-//     next();
-// });
-
 userSchema.pre<IUserDocument>("save", function (this: IUserDocument) {
     if (this.isModified("password")) {
         this.password = hashPassword(this.password);

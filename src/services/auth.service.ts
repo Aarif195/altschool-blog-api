@@ -1,11 +1,11 @@
 import User, { IUserDocument } from "../models/user.model";
 import jwt from "jsonwebtoken";
 import { IUser } from "../types/user";
-import { sendError } from "../utils/helpers";
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret_key"; 
+const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
 export class AuthService {
+    // signup
     static async signup(data: IUser) {
         const existing = await User.findOne({ email: data.email });
         if (existing) throw new Error("Email already in use");
@@ -17,6 +17,7 @@ export class AuthService {
         return { user, token };
     }
 
+    // login
     static async login(email: string, password: string) {
         const user = await User.findOne({ email });
         if (!user) throw new Error("Invalid credentials");

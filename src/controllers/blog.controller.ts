@@ -26,6 +26,7 @@ export class BlogController {
                 search: req.query.search as string,
                 sortBy: req.query.sortBy as "read_count" | "reading_time" | "createdAt",
                 sortOrder: req.query.sortOrder as "asc" | "desc",
+                requesterId: (req as AuthRequest).userId, // Add requesterId
             };
             const result = await BlogService.getAllBlogs(options);
             res.json(result);

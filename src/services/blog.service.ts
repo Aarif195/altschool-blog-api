@@ -2,26 +2,21 @@ import Blog, { IBlogDocument } from "../models/blog.model";
 import { IBlog } from "../types/blog";
 import { Types } from "mongoose";
 import { GetBlogsOptions } from "../types/blog";
-
+import { ReadingTimeService } from "./readingTime.service";
 
 export class BlogService {
-
+  
+  // createBlog
   static async createBlog(data: IBlog, authorId: string): Promise<IBlogDocument> {
     const blog = new Blog({
       ...data,
       author: new Types.ObjectId(authorId),
       state: "draft",
       read_count: 0,
-      reading_time: BlogService.calculateReadingTime(data.body),
+      reading_time: ReadingTimeService.calculateReadingTime(data.body),
     });
 
     return blog.save();
-  }
-
-  // Simple reading time calculation (words / 200 wpm)
-  static calculateReadingTime(body: string): number {
-    const words = body.trim().split(/\s+/).length;
-    return Math.ceil(words / 200);
   }
 
   // Get all blogs (public)
@@ -30,11 +25,39 @@ export class BlogService {
     const limit = options.limit || 20;
     const skip = (page - 1) * limit;
 
-    const filter: any = { state: "published" };
-    if (options.state) filter.state = options.state;
+    const filter: any = {};
+
+    // State filter logic
+    if (options.state === "draft") {
+      if (!options.requesterId) {
+        throw new Error("Unauthorized: Login to view drafts");
+      }
+      // Users can only view their own drafts
+      filter.state = "draft";
+      filter.author = options.requesterId;
+    } else {
+      // Default to published if not specified to 'published'
+      filter.state = "published";
+    }
+
+    // Search logic
     if (options.search) {
       const regex = new RegExp(options.search, "i");
-      filter.$or = [{ title: regex }, { description: regex }, { tags: regex }];
+
+      // Find authors matching the search term
+      const User = require("../models/user.model").default;
+      const authors = await User.find({
+        $or: [{ first_name: regex }, { last_name: regex }, { email: regex }]
+      }).select("_id");
+
+      const authorIds = authors.map((a: any) => a._id);
+
+      filter.$or = [
+        { title: regex },
+        { description: regex },
+        { tags: regex },
+        { author: { $in: authorIds } }
+      ];
     }
 
     const sort: any = {};
@@ -78,7 +101,6 @@ export class BlogService {
     return blog;
   }
 
-
   // updateBlog
   static async updateBlog(
     blogId: string,
@@ -99,10 +121,10 @@ export class BlogService {
     if (data.description) blog.description = data.description;
     if (data.body) {
       blog.body = data.body;
-      blog.reading_time = BlogService.calculateReadingTime(data.body);
+      blog.reading_time = ReadingTimeService.calculateReadingTime(data.body);
     }
     if (data.tags) blog.tags = data.tags;
-    if (data.state) blog.state = data.state; // allow draft → published
+    if (data.state) blog.state = data.state;
 
     return blog.save();
   }
@@ -120,7 +142,6 @@ export class BlogService {
 
     return blog.deleteOne();
   }
-
 
 }
 

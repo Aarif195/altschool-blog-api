@@ -5,7 +5,7 @@ export interface IBlog {
   description?: string;
   body: string;
   tags?: string[];
-  author: Types.ObjectId; 
+  author: Types.ObjectId;
   state: "draft" | "published";
   read_count: number;
   reading_time: number;
@@ -20,4 +20,5 @@ export interface GetBlogsOptions {
   search?: string;
   sortBy?: "read_count" | "reading_time" | "createdAt";
   sortOrder?: "asc" | "desc";
+  requesterId?: string;
 }
