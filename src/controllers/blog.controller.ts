@@ -35,44 +35,47 @@ export class BlogController {
     }
 
     // Get single blog by ID
-  static async getBlog(req: AuthRequest, res: Response) {
-  try {
-    const blogId = req.params.id as string
-    const requesterId = req.userId; // from authMiddleware
-    const blog = await BlogService.getBlogById(blogId, requesterId);
-    res.json({ blog });
-  } catch (err: any) {
-    sendError(res, err.message);
-  }
-}
+    static async getBlog(req: Request, res: Response) {
+        try {
+            const blogId = req.params.id as string;
 
-// updateBlog
-static async updateBlog(req: AuthRequest, res: Response) {
-  try {
-    const blogId = req.params.id as string
-    const requesterId = req.userId 
-    if (!requesterId) return sendError(res, "Unauthorized");
+            // If user is logged in, get their ID; otherwise undefined
+            const requesterId = (req as AuthRequest).userId;
 
-    const updatedBlog = await BlogService.updateBlog(blogId, requesterId, req.body);
-    res.json({ blog: updatedBlog });
-  } catch (err: any) {
-    sendError(res, err.message);
-  }
-}
+            const blog = await BlogService.getBlogById(blogId, requesterId);
+            res.json({ blog });
+        } catch (err: any) {
+            sendError(res, err.message);
+        }
+    }
 
-// deleteBlog
-static async deleteBlog(req: AuthRequest, res: Response) {
-  try {
-    const blogId = req.params.id as string
-    const requesterId = req.userId; 
-    if (!requesterId) return sendError(res, "Unauthorized");
+    // updateBlog
+    static async updateBlog(req: AuthRequest, res: Response) {
+        try {
+            const blogId = req.params.id as string
+            const requesterId = req.userId
+            if (!requesterId) return sendError(res, "Unauthorized");
 
-    await BlogService.deleteBlog(blogId, requesterId);
-    res.json({ message: "Blog deleted successfully" });
-  } catch (err: any) {
-    sendError(res, err.message);
-  }
-}
+            const updatedBlog = await BlogService.updateBlog(blogId, requesterId, req.body);
+            res.json({ blog: updatedBlog });
+        } catch (err: any) {
+            sendError(res, err.message);
+        }
+    }
+
+    // deleteBlog
+    static async deleteBlog(req: AuthRequest, res: Response) {
+        try {
+            const blogId = req.params.id as string
+            const requesterId = req.userId;
+            if (!requesterId) return sendError(res, "Unauthorized");
+
+            await BlogService.deleteBlog(blogId, requesterId);
+            res.status(204).send();
+        } catch (err: any) {
+            sendError(res, err.message);
+        }
+    }
 
 
 

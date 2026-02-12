@@ -7,8 +7,8 @@ const router = Router();
 // Protected route: only logged-in users can create blogs
 router.post("/", authMiddleware, BlogController.createBlog);
 router.get("/", BlogController.getAllBlogs);
-router.get("/:id", BlogController.getBlog);
-router.put("/:id", authMiddleware, BlogController.updateBlog);
+router.get("/:id", authMiddleware, BlogController.getBlog);
+router.put("/:id", BlogController.updateBlog);
 router.delete("/:id", authMiddleware, BlogController.deleteBlog);
 
 
