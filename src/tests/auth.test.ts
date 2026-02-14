@@ -1,7 +1,6 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import app from "../../server";
-import User from "../models/user.model";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -33,8 +32,8 @@ describe("Auth Endpoints", () => {
                 });
 
             expect(res.status).toBe(201);
-            expect(res.body).toHaveProperty("message", "User created successfully");
-       
+            expect(res.body).toHaveProperty("token");
+            expect(res.body).toHaveProperty("user");
         });
 
         it("should not allow duplicate emails", async () => {
@@ -58,7 +57,7 @@ describe("Auth Endpoints", () => {
                     password: "password123"
                 });
 
-            expect(res.status).toBe(400); 
+            expect(res.status).toBe(400);
         });
     });
 
@@ -95,7 +94,7 @@ describe("Auth Endpoints", () => {
                     password: "wrongpassword"
                 });
 
-            expect(res.status).toBe(400); 
+            expect(res.status).toBe(400);
         });
     });
 });

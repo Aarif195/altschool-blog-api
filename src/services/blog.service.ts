@@ -5,7 +5,7 @@ import { GetBlogsOptions } from "../types/blog";
 import { ReadingTimeService } from "./readingTime.service";
 
 export class BlogService {
-  
+
   // createBlog
   static async createBlog(data: IBlog, authorId: string): Promise<IBlogDocument> {
     const blog = new Blog({
@@ -34,7 +34,8 @@ export class BlogService {
       }
       // Users can only view their own drafts
       filter.state = "draft";
-      filter.author = options.requesterId;
+      // filter.author = options.requesterId;
+      filter.author = new Types.ObjectId(options.requesterId);
     } else {
       // Default to published if not specified to 'published'
       filter.state = "published";
@@ -87,7 +88,7 @@ export class BlogService {
     const isOwner = requesterId && blog.author._id.toString() === requesterId.toString();
 
     if (blog.state === "draft") {
-      if (!requesterId || blog.author._id.toString() !== requesterId) {
+      if (!requesterId || blog.author._id.toString() !== requesterId.toString()) {
         throw new Error("Unauthorized to view this draft");
       }
     }
@@ -112,7 +113,7 @@ export class BlogService {
     if (!blog) throw new Error("Blog not found");
 
     // Only owner can update
-    if (blog.author.toString() !== requesterId) {
+    if (String(blog.author) !== String(requesterId)) {
       throw new Error("Unauthorized to update this blog");
     }
 
@@ -136,7 +137,7 @@ export class BlogService {
     if (!blog) throw new Error("Blog not found");
 
     // Only owner can delete
-    if (blog.author.toString() !== requesterId) {
+    if (String(blog.author) !== String(requesterId)) {
       throw new Error("Unauthorized to delete this blog");
     }
 

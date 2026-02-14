@@ -1,8 +1,6 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import app from "../../server";
-import Blog from "../models/blog.model";
-import User from "../models/user.model";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -43,7 +41,9 @@ describe("Blog Endpoints", () => {
         });
         token = loginRes.body.token;
         const decoded: any = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-        userId = decoded.id; // Or fetch from DB if ID not in token payload directly (it is in payload as 'id')
+        userId = decoded.id; 
+
+        console.log("TEST USER ID:", userId);
 
         // Create another user
         await request(app).post("/api/auth/signup").send({
@@ -98,8 +98,7 @@ describe("Blog Endpoints", () => {
 
         it("should not return drafts to public", async () => {
             const res = await request(app).get("/api/blogs?state=draft");
-            // Expecting error or empty list depending on impl. Logic says "Unauthorized" if no token.
-            expect(res.status).toBe(400); // "Unauthorized: Login to view drafts" or similar
+            expect(res.status).toBe(400); // "Unauthorized: Login to view drafts"
         });
     });
 
@@ -171,7 +170,7 @@ describe("Blog Endpoints", () => {
 
         it("should return 404 for deleted blog", async () => {
             const res = await request(app).get(`/api/blogs/${blogId}`);
-            expect(res.status).toBe(400); // "Blog not found" (using 400 in controller for errors)
+            expect(res.status).toBe(400); // "Blog not found" 
         });
     });
 });
