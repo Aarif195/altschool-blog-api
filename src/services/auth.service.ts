@@ -25,7 +25,7 @@ export class AuthService {
         const isMatch = user.comparePassword(password);
         if (!isMatch) throw new Error("Invalid credentials");
 
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "22h" });
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
         return { user, token };
     }
 }
