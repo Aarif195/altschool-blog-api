@@ -36,6 +36,27 @@ Supports authentication, CRUD operations on blogs, pagination, search, sorting, 
 
 ---
 
+ ## Security
+Include the JWT in the header for protected routes:
+Authorization: Bearer <your_jwt_token>
+
+## API Reference
+ Base URL: https://altschool-blog-api-8yk5.onrender.com/
+
+### Endpoints
+
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| POST | `/api/auth/signup` | Register a new user | No |
+| POST | `/api/auth/login` | Login and receive a 1h JWT | No |
+| POST | `/api/blogs` | Create a new blog | Yes |
+| GET | `/api/blogs` | Get all published blogs | No |
+| GET | `/api/blogs/:id` | Get a single blog | No |
+| PUT | `/api/blogs/:id` | Update a blog | Yes (Owner) |
+| DELETE | `/api/blogs/:id` | Delete a blog | Yes (Owner) |
+
+---
+
 ## Getting Started
 
 ### Installation
