@@ -119,7 +119,7 @@ describe("Blog Endpoints", () => {
                 .set("Authorization", `Bearer ${otherToken}`);
 
             expect(res.status).toBe(200);
-            expect(res.body.blogs.length).toBe(0); // Other user has no drafts
+            expect(res.body.blogs.length).toBe(0); 
         });
     });
 

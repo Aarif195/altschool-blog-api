@@ -57,6 +57,30 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
+## Get All Blogs
+
+Fetches a list of blogs with support for:
+- Pagination
+- Draft vs published filtering
+- Search
+- Sorting
+
+---
+
+### Query Parameters
+
+| Parameter     | Type   | Description |
+|--------------|--------|-------------|
+| page         | number | Page number (default: 1) |
+| limit        | number | Number of blogs per page (default: 20) |
+| state        | string | `published` or `draft` |
+| search       | string | Search keyword |
+| sortBy       | string | Field to sort by (e.g. `createdAt`, `read_count`) |
+| sortOrder    | string | `asc` or `desc` |
+| requesterId  | string | Required when fetching drafts |
+
+---
+
 ## Getting Started
 
 ### Installation
